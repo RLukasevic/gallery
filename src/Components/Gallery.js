@@ -1,68 +1,64 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import {useDispatch, useSelector} from "react-redux";
+import * as actions from '../redux/actions/allActions';
 
 const Gallery = () => {
 
-  const [maxPages, setMaxPages] = useState();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [images, setImages] = useState();
+    let loader = useRef(null);
+    let images = useSelector(state => state.images);
+    let error = useSelector(state => state.error);
+    let loading = useSelector(state => state.loading);
+    let page = useSelector(state => state.page);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        window.addEventListener('scroll', infiniteScroll);
-        fetchImages()
+        let options = {
+            root: null,
+            rootMargin: "15px",
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver(handleObserver, options);
+
+        if (loader.current) {
+            observer.observe(loader.current)
+        }
 
         return () => {
-			window.removeEventListener("scroll", infiniteScroll);
-		};
-    }, [])
+            observer.unobserve(loader.current);
+          };
+    
+    }, []);
 
-    const fetchImages = (page) => {
-      let url = 'http://localhost:3232/api/getImages?page=' + (page || 1);
-      axios.get(url)
-        .then(res=> res.data)
-        .then(data => {
-          setImages(data.paginatedData)
-          setMaxPages(data.maximumPages)
-      })
+    useEffect(() => {
+        dispatch(actions.initFetchImages(page));
+    }, [page])
+
+    const handleObserver = (entities) => {
+        const target = entities[0];
+        if (target.isIntersecting) {   
+            dispatch(actions.changePage())
+        }
     }
-
-    const fetchNewImages = (page) => {
-      let url = 'http://localhost:3232/api/getImages?page=' + (page || 1);
-      console.log(images)
-      axios.get(url)
-        .then(res=> res.data)
-        .then(data => {
-        //   if (newImages === undefined) {
-        //     console.log('undef')
-        //   } else {
-          for (let item in data.paginatedData) {
-            images.push(data.paginatedData[item])
-          }
-          setImages(images)
-          setMaxPages(data.maximumPages)
-      })
-    }
-
-    const infiniteScroll = () => {
-      console.log(window.innerHeight)
-      console.log(window.pageYOffset)
-      console.log(document.documentElement.offsetHeight)
-      if (window.innerHeight + document.documentElement.scrollTop - 17 === document.documentElement.offsetHeight) {
-         let newPage = currentPage;
-         newPage++;
-         setCurrentPage(newPage)
-         fetchNewImages(newPage);
-         }
-      }
 
   return (
-    <div className='row flex-column'>
-      {images ? 
-        images.map(item => {
-          return <img className='col sm-6' src={item.url} key={item.id} />
-        }) : null} 
-    </div>
+        <div className='row flex-column'>
+
+            {images ? 
+                images.map(item => {
+                return <img className='col sm-6' src={item.url} key={item.id} />
+                }) : null
+            } 
+
+            <div className="loading" style={{display: "hidden", paddingLeft: "30px"}} ref={loader}>
+                <h2>Loading More</h2>
+            </div>
+        </div>
+    
   );
 }
 
-export default Gallery;
+export default withRouter(Gallery);
