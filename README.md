@@ -1,6 +1,5 @@
 
-# mobShop
-
+# Gallery
 ### How to run this project
 
 To run project on your localhost, follow the steps below :
@@ -29,5 +28,13 @@ Enter `npm install .` in the command prompt and hit Enter. This should install a
 When dependencies are installed, you can run `npm start` command.
 Local server will set up, and browser tab with the localhost:port link opened.
 
+### `step 4`
+
+Open another command prompt and run `cd C:/replace-with-path-to-the-project-folder/srv` command.
+(example `cd C:/Users/user/desktop/project-folder/srv`)
+
+Type `node index` command to start API server from which we will fetch data.
+
+Refresh the page in the browser which opened during step 3.
 You can use the app now.
 
