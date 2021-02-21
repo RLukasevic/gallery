@@ -33,7 +33,6 @@ const sortFilter = (data) => {
 }
 
 app.get('/api/getImages', (req, res) => {
-	console.log(req.query.page)
 	const page = req.query.page || 1;
 	const sortedData = sortFilter(data);
 
