@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
-import { connect } from 'react-redux';
+import React, { useEffect, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../redux/actions/allActions';
@@ -17,8 +15,8 @@ const Gallery = () => {
     useEffect(() => {
         let options = {
             root: null,
-            rootMargin: "15px",
-            threshold: 0
+            rootMargin: "30px",
+            threshold: 1
         };
 
         const observer = new IntersectionObserver(handleObserver, options);
@@ -26,10 +24,6 @@ const Gallery = () => {
         if (loader.current) {
             observer.observe(loader.current)
         }
-
-        return () => {
-            observer.unobserve(loader.current);
-          };
     
     }, []);
 
@@ -45,17 +39,27 @@ const Gallery = () => {
     }
 
   return (
-        <div className='row flex-column'>
+        <div className='row flex-column' style={{width: '100%', margin: '0px'}}>
 
-            {images ? 
-                images.map(item => {
-                return <img className='col sm-6' src={item.url} key={item.id} />
-                }) : null
-            } 
-
-            <div className="loading" style={{display: "hidden", paddingLeft: "30px"}} ref={loader}>
-                <h2>Loading More</h2>
+            <div className='col-sm-12 col-12' style={{padding: '0px'}}>
+                {images ? 
+                    images.map(item => {
+                        return <img className='col-xs-12 col-6' style={{padding: '0px'}} src={item.url} key={item.id} />
+                    }) : null
+                } 
             </div>
+
+            {page <= 10 && error === false ? 
+                <div className="loading col-12 text-center" style={{display: "hidden", paddingLeft: "30px"}} ref={loader}>
+                    <h2>Loading Images</h2>
+                </div> : null
+            }
+
+            {error ? 
+                <div className='col-12 text-center' style={{color: 'red'}}>
+                    Something went wrong, try again later
+                </div> : null
+            }
         </div>
     
   );
