@@ -44,7 +44,7 @@ const Gallery = () => {
             <div className='col-12' style={{padding: '0px'}}>
                 {images ? 
                     images.map(item => {
-                        return <img className='col-6' style={{padding: '0px'}} src={item.url} key={item.id} />
+                        return <img className='col-6' style={{padding: '0px', border: '1px solid black'}} src={item.url} key={item.id} />
                     }) : null
                 } 
             </div>
