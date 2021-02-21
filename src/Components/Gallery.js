@@ -41,16 +41,16 @@ const Gallery = () => {
   return (
         <div className='row flex-column' style={{width: '100%', margin: '0px'}}>
 
-            <div className='col-sm-12 col-12' style={{padding: '0px'}}>
+            <div className='col-12' style={{padding: '0px'}}>
                 {images ? 
                     images.map(item => {
-                        return <img className='col-xs-12 col-6' style={{padding: '0px'}} src={item.url} key={item.id} />
+                        return <img className='col-6' style={{padding: '0px'}} src={item.url} key={item.id} />
                     }) : null
                 } 
             </div>
 
             {page <= 10 && error === false ? 
-                <div className="loading col-12 text-center" style={{display: "hidden", paddingLeft: "30px"}} ref={loader}>
+                <div className="loading col-12 text-center" ref={loader}>
                     <h2>Loading Images</h2>
                 </div> : null
             }
